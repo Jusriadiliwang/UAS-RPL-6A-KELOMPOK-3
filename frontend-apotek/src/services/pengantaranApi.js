@@ -1,14 +1,12 @@
-const pengantaranData = [
-  {
-    id: 1,
-    kode: '#001',
-    status: 'Sedang Dikirim',
-  },
-  {
-    id: 2,
-    kode: '#002',
-    status: 'Sampai Tujuan',
-  },
-]
+export async function getPengantaran() {
+  const response = await fetch('/api/pengantaran');
 
-export default pengantaranData
+  if (!response.ok) {
+    throw new Error('Gagal mengambil data pengantaran');
+  }
+
+  const result = await response.json();
+  return result.data ?? [];
+}
+
+export default getPengantaran;
