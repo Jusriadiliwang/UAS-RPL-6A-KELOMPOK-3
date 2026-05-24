@@ -6,3 +6,4 @@ dokter-service:
     - MONGO_URI=mongodb://mongo:27017/dokter_service_db
   depends_on:
     - mongo
+     # lanjutkan 
