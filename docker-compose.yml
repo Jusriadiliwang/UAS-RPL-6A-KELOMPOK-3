@@ -1,9 +1,49 @@
-dokter-service:
-  build: ./services/dokter-service
-  ports:
-    - "8002:8002"
-  environment:
-    - MONGO_URI=mongodb://mongo:27017/dokter_service_db
-  depends_on:
-    - mongo
-     # lanjutkan 
+version: '3.8'
+
+services:
+  obat-service:
+    build: ./services/obat-service
+    ports:
+      - "8001:8001"
+    environment:
+      - NODE_ENV=production
+
+  dokter-service:
+    build: ./services/dokter-service
+    ports:
+      - "8002:8002"
+    environment:
+      - NODE_ENV=production
+
+  pengantaran-service:
+    build: ./services/pengantaran-service
+    ports:
+      - "8003:8003"
+    environment:
+      - NODE_ENV=production
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - obat-service
+      - dokter-service
+      - pengantaran-service
+    environment:
+      - PORT=3000
+      - DOKTER_SERVICE_URL=http://dokter-service:8002/api
+      - OBAT_SERVICE_URL=http://obat-service:8001/api/obat
+      - PENGANTARAN_SERVICE_URL=http://pengantaran-service:8003/api/pengantaran
+      - JWT_SECRET=rahasia_apotek_super_aman_123
+      - DISABLE_AUTH=true
+
+  frontend-apotek:
+    build: ./frontend-apotek
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+    environment:
+      - API_URL=http://api-gateway:3000
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

@@ -7,6 +7,11 @@ const verifyToken = (req, res, next) => {
     // 2. Ambil tokennya saja (Biasanya formatnya: "Bearer <token_acak>")
     const token = authHeader && authHeader.split(' ')[1];
 
+    // Jika sedang dijalankan dalam mode pengembangan Docker, izinkan semua request.
+    if (process.env.DISABLE_AUTH === 'true') {
+        return next();
+    }
+
     // 3. Kalau token tidak ada, langsung tolak di gerbang!
     if (!token) {
         return res.status(401).json({ error: 'Akses Ditolak! Token tidak ditemukan.' });

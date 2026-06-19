@@ -5,9 +5,6 @@ const router = express.Router();
 router.use('/', createProxyMiddleware({
     target: process.env.PENGANTARAN_SERVICE_URL,
     changeOrigin: true,
-    pathRewrite: {
-        '^/api/pengantaran': '',
-    },
     onError: (err, req, res) => {
         console.error('[Gateway Error]', err.message);
         res.status(502).json({ error: 'Service Pengantaran sedang down atau tidak merespon.' });
