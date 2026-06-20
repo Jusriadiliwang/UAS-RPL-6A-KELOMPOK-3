@@ -1,62 +1,72 @@
-import { useEffect, useState } from 'react'
-import DeliveryStatus from '../components/DeliveryStatus'
-import { getPengantaran } from '../services/pengantaranApi'
+const dataPengantaran = [
+  {
+    kode: "ORD-001",
+    nama: "Paracetamol",
+    alamat: "Jl. Sultan Alauddin, Makassar",
+    kurir: "Kurir ApotekCare",
+    status: "Diproses",
+  },
+  {
+    kode: "ORD-002",
+    nama: "Vitamin C",
+    alamat: "Jl. Perintis Kemerdekaan, Makassar",
+    kurir: "GoSend",
+    status: "Dalam Pengantaran",
+  },
+  {
+    kode: "ORD-003",
+    nama: "Amoxicillin",
+    alamat: "Jl. Hertasning, Makassar",
+    kurir: "JNE ApotekCare",
+    status: "Selesai",
+  },
+];
 
 function Pengantaran() {
-  const [pengantaranData, setPengantaranData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-
-  useEffect(() => {
-    let isMounted = true
-
-    async function loadPengantaran() {
-      try {
-        setLoading(true)
-        const data = await getPengantaran()
-
-        if (isMounted) {
-          setPengantaranData(data)
-          setError('')
-        }
-      } catch (err) {
-        if (isMounted) {
-          setError(err.message || 'Gagal memuat data pengantaran')
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    loadPengantaran()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
-
   return (
-    <div>
-      <h1>🚚 Pengantaran</h1>
+    <div className="page">
+      <div className="page-header">
+        <h1>🚚 Pengantaran Obat</h1>
+        <p>Monitoring data pengiriman pesanan obat pelanggan.</p>
+      </div>
 
-      {loading && <p>Memuat data pengantaran...</p>}
-      {error && <p>{error}</p>}
+      <div className="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Kode Pesanan</th>
+              <th>Nama Obat</th>
+              <th>Alamat</th>
+              <th>Kurir</th>
+              <th>Status</th>
+            </tr>
+          </thead>
 
-      {!loading && !error && (
-        <div className="card-grid">
-          {pengantaranData.map((item) => (
-            <DeliveryStatus
-              key={item.id}
-              kode={item.kode}
-              status={item.status}
-            />
-          ))}
-        </div>
-      )}
+          <tbody>
+            {dataPengantaran.map((item, index) => (
+              <tr key={index}>
+                <td>{item.kode}</td>
+                <td>{item.nama}</td>
+                <td>{item.alamat}</td>
+                <td>{item.kurir}</td>
+                <td>
+                  <span
+                    className={
+                      item.status === "Selesai"
+                        ? "status selesai"
+                        : "status proses"
+                    }
+                  >
+                    {item.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Pengantaran
+export default Pengantaran;
