@@ -1,0 +1,12 @@
+{
+  "installCommand": "cd frontend-apotek && npm install",
+  "buildCommand": "cd frontend-apotek && npm run build",
+  "outputDirectory": "frontend-apotek/dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
